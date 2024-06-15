@@ -9,9 +9,9 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./Navbar.module.css";
-import { IconBadge } from "@tabler/icons-react";
 import { Toggle } from "./Toggle";
 import useCartStore from "../../store/cart";
+import { CiShoppingCart } from "react-icons/ci";
 
 const links = [
   { link: "/", label: "Home" },
@@ -46,7 +46,7 @@ export function Navbar() {
         <Group gap={5} visibleFrom="xs">
           {items}
           <ActionIcon variant="filled" aria-label="Settings">
-            <IconBadge style={{ width: "70%", height: "70%" }} stroke={1.5} />
+            <CiShoppingCart />
           </ActionIcon>
           <Code>{cart.length}</Code>
           <Toggle />
