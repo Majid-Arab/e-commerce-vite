@@ -10,18 +10,20 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import classes from "./Navbar.module.css";
 import { IconBadge } from "@tabler/icons-react";
+import { Toggle } from "./Toggle";
+import useCartStore from "../../store/cart";
 
 const links = [
-  { link: "/about", label: "Features" },
-  { link: "/pricing", label: "Pricing" },
-  { link: "/learn", label: "Learn" },
-  { link: "/community", label: "Community" },
+  { link: "/", label: "Home" },
+  { link: "/products", label: "Products" },
+  { link: "/about-us", label: "About us" },
+  { link: "/contact-us", label: "Contact us" },
 ];
 
 export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
-
+  const cart = useCartStore((state) => state.cart);
   const items = links.map((link) => (
     <a
       key={link.label}
@@ -46,7 +48,8 @@ export function Navbar() {
           <ActionIcon variant="filled" aria-label="Settings">
             <IconBadge style={{ width: "70%", height: "70%" }} stroke={1.5} />
           </ActionIcon>
-          <Code>1</Code>
+          <Code>{cart.length}</Code>
+          <Toggle />
         </Group>
 
         <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
