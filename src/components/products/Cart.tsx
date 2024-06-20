@@ -1,3 +1,4 @@
+import cx from "clsx";
 import { useState } from "react";
 import {
   Table,
@@ -7,14 +8,17 @@ import {
   Avatar,
   Text,
   rem,
+  Button,
 } from "@mantine/core";
 import { Product } from "../../type";
 import useCartStore from "../../store/cart";
+import classes from "./Cart.module.css";
 
 function Cart() {
   const cart = useCartStore((state) => state.cart);
+  const removeFromCart = useCartStore((state) => state.removeFromCart);
 
-  const [selection, setSelection] = useState(["1"]);
+  const [selection, setSelection] = useState<string[]>([]);
   const toggleRow = (id: string) =>
     setSelection((current) =>
       current.includes(id)
@@ -22,10 +26,20 @@ function Cart() {
         : [...current, id]
     );
 
+  const toggleAll = () => {
+    setSelection((current) =>
+      current.length === cart.length
+        ? []
+        : cart.map((product) => product.id.toString())
+    );
+  };
   const rows = cart.map((product: Product) => {
-    // const selected = selection.includes(product.id);
+    const selected = selection.includes(product.id.toString());
     return (
-      <Table.Tr key={product.id}>
+      <Table.Tr
+        key={product.id}
+        className={cx({ [classes.rowSelected]: selected })}
+      >
         <Table.Td>
           <Checkbox
             checked={selection.includes(product.id.toString())}
@@ -34,7 +48,7 @@ function Cart() {
         </Table.Td>
         <Table.Td>
           <Group gap="sm">
-            <Avatar size={26} src={product.image[0]} radius={26} />
+            <Avatar size={26} src={product.image} radius={26} />
             <Text size="sm" fw={500}>
               {product.title}
             </Text>
@@ -42,6 +56,15 @@ function Cart() {
         </Table.Td>
         <Table.Td>{product.description}</Table.Td>
         <Table.Td>{product.price}</Table.Td>
+        <Table.Td>
+          <Button
+            onClick={() => removeFromCart(product.id)}
+            size="xs"
+            tt="uppercase"
+          >
+            Remove from cart
+          </Button>
+        </Table.Td>
       </Table.Tr>
     );
   });
@@ -57,11 +80,13 @@ function Cart() {
                 indeterminate={
                   selection.length > 0 && selection.length !== cart.length
                 }
+                onChange={toggleAll}
               />
             </Table.Th>
-            <Table.Th>User</Table.Th>
-            <Table.Th>Email</Table.Th>
-            <Table.Th>Job</Table.Th>
+            <Table.Th>Title</Table.Th>
+            <Table.Th>Description</Table.Th>
+            <Table.Th>Price</Table.Th>
+            <Table.Th>Action</Table.Th>
           </Table.Tr>
         </Table.Thead>
         <Table.Tbody>{rows}</Table.Tbody>
