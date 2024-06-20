@@ -12,6 +12,7 @@ import classes from "./Navbar.module.css";
 import { Toggle } from "./Toggle";
 import useCartStore from "../../store/cart";
 import { CiShoppingCart } from "react-icons/ci";
+import { Link } from "react-router-dom";
 
 const links = [
   { link: "/", label: "Home" },
@@ -24,19 +25,17 @@ export function Navbar() {
   const [opened, { toggle }] = useDisclosure(false);
   const [active, setActive] = useState(links[0].link);
   const cart = useCartStore((state) => state.cart);
+
   const items = links.map((link) => (
-    <a
+    <Link
       key={link.label}
-      href={link.link}
+      to={link.link}
       className={classes.link}
       data-active={active === link.link || undefined}
-      onClick={(event) => {
-        event.preventDefault();
-        setActive(link.link);
-      }}
+      onClick={() => setActive(link.link)}
     >
       {link.label}
-    </a>
+    </Link>
   ));
 
   return (
@@ -45,10 +44,12 @@ export function Navbar() {
         <Title>Logo</Title>
         <Group gap={5} visibleFrom="xs">
           {items}
-          <ActionIcon variant="filled" aria-label="Settings">
-            <CiShoppingCart />
-          </ActionIcon>
-          <Code>{cart.length}</Code>
+          <Link to="/cart" className={classes.link}>
+            <ActionIcon variant="filled" aria-label="Settings">
+              <CiShoppingCart />
+            </ActionIcon>
+            <Code>{cart.length}</Code>
+          </Link>
           <Toggle />
         </Group>
 
